@@ -45,12 +45,19 @@ namespace Labyrinth.Controllers
             else if (vert != 0)
             {
                 Vector3Int move = AEUtilities.PosToInt(transform.position + transform.forward * vert);
+                GameObject o; 
                 if (AEUtilities.CheckTagAtLocation(move, "pit"))
                 {
                     StartCoroutine(LabyrinthInteractions.JumpDown(gameObject, move));
                     endTurn = true;
                     return "";
-                } else if (AEUtilities.CheckTagAtLocation(move, "floor"))
+                } else if (AEUtilities.CheckTagAtLocation(move, "enemy", out o)) 
+                { 
+                    StartCoroutine(LabyrinthInteractions.Attack(gameObject, o));
+                    endTurn = false;
+                    return "";
+                }
+                else if (AEUtilities.CheckTagAtLocation(move, "floor"))
                 {
                     if (vert == 1)
                     {

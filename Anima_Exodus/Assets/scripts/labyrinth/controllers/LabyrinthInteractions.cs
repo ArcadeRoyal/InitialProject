@@ -19,12 +19,33 @@ namespace Labyrinth.Controllers
                 while (!o.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
                     yield return null;
                 o.GetComponent<Animator>().SetTrigger("jump_down");
+                yield return null; 
                 while (!o.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
                     yield return null;
                 GameManager.instance.Paused = false;
 
             }
 
+        }
+
+        public static IEnumerator Attack(GameObject subject, GameObject target)  
+        { 
+            if (CheckAnimatable(subject) && CheckAnimatable(target)) 
+            {
+                GameManager.instance.Paused = true;
+                TurnToFace(subject, AEUtilities.PosToInt(target.transform.position));
+                TurnToFace(target, AEUtilities.PosToInt(subject.transform.position));
+                yield return null; 
+                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") && 
+                       target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                    yield return null;
+                subject.GetComponent<Animator>().SetTrigger("attack"); 
+                target.GetComponent<Animator>().SetTrigger("defend");
+                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") &&
+                       target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                    yield return null;
+                GameManager.instance.Paused = false;
+            }
         }
 
         private static void TurnToFace(GameObject o, Vector3Int target)
