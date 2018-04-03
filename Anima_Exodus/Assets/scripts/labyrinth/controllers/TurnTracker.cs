@@ -17,13 +17,14 @@ namespace Labyrinth.Controllers
             }
             set
             {
-                myTurn = value; 
+                myTurn = value;
+                Debug.Log("Some File"); 
             }
         }
 
         public void EndTurn()
         {
-            myTurn = false;
+            myTurn = false; 
             ITurnTickable[] tickables = GetComponents<ITurnTickable>(); 
             for (int i = 0;  i < tickables.Length; i++ )
             {
