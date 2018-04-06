@@ -18,7 +18,6 @@ namespace Labyrinth.Controllers
             set
             {
                 myTurn = value;
-                Debug.Log("Some File"); 
             }
         }
 

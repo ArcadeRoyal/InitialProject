@@ -29,22 +29,30 @@ namespace Labyrinth.Controllers
         }
 
         public static IEnumerator Attack(GameObject subject, GameObject target)  
-        { 
-            if (CheckAnimatable(subject) && CheckAnimatable(target)) 
+        {
+            if (CheckAnimatable(subject) && CheckAnimatable(target))
             {
                 GameManager.instance.Paused = true;
                 TurnToFace(subject, AEUtilities.PosToInt(target.transform.position));
                 TurnToFace(target, AEUtilities.PosToInt(subject.transform.position));
-                yield return null; 
-                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") && 
-                       target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                yield return null;
+                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") ||
+                       !target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                {
                     yield return null;
-                subject.GetComponent<Animator>().SetTrigger("attack"); 
+                }
+                subject.GetComponent<Animator>().SetTrigger("attack");
                 target.GetComponent<Animator>().SetTrigger("defend");
-                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") &&
-                       target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                yield return null;
+                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") ||
+                       !target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                {
                     yield return null;
-                GameManager.instance.Paused = false;
+                }
+                Debug.Log("Animations should be finished.Idle boolean values for both entitie are: " +
+                          subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") + " " +
+                          target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"));
+                GameManager.instance.Paused = false; 
             }
         }
 
