@@ -96,4 +96,41 @@ public static class AEUtilities
         return false;
     }
 
+    /// <summary>
+    /// Returns true if tag exists at location
+    /// </summary>
+    /// <param name="pos">location to check</param>
+    /// <param name="tag">tag to check</param>
+    /// <returns>true if tag exists at location</returns>
+    public static bool CheckTagsAtLocation(Vector3Int pos, string[] tags)
+    {
+        List<GameTags> taglist = GetTagsAtLocation(pos);
+        for (int i = 0; i < taglist.Count; i++)
+            for (int j = 0; j < strings.Length; j++ )
+                if (taglist[i].CheckTag(tags[j]))
+                    return true;
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if tag exists at location, and sets o to the game object of the tag
+    /// </summary>
+    /// <param name="pos">location to check</param>
+    /// <param name="tag">tag to check</param>
+    /// <param name="o">output game object</param>
+    /// <returns>true if tag exists at location</returns>
+    public static bool CheckTagsAtLocation(Vector3Int pos, string[] tags, out GameObject o)
+    {
+        List<GameTags> taglist = GetTagsAtLocation(pos);
+        for (int i = 0; i < taglist.Count; i++)
+            for (int j = 0; j < tags.Length; j++)
+                if (taglist[i].CheckTag(tags[j]))
+                {
+                    o = taglist[i].gameObject;
+                    return true;
+                }
+        o = null;
+        return false;
+    }
+
 }
