@@ -33,19 +33,21 @@ namespace Labyrinth.Controllers
             if (CheckAnimatable(subject) && CheckAnimatable(target))
             {
                 GameManager.instance.Paused = true;
+                while (!CheckIdle(subject) || !CheckIdle(target))
+                {
+                    yield return null;
+                }
                 TurnToFace(subject, AEUtilities.PosToInt(target.transform.position));
                 TurnToFace(target, AEUtilities.PosToInt(subject.transform.position));
                 yield return null;
-                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") ||
-                       !target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                while (!CheckIdle(subject) || !CheckIdle(target))
                 {
                     yield return null;
                 }
                 subject.GetComponent<Animator>().SetTrigger("attack");
                 target.GetComponent<Animator>().SetTrigger("defend");
                 yield return null;
-                while (!subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") ||
-                       !target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"))
+                while (!CheckIdle(subject) || !CheckIdle(target))
                 {
                     yield return null;
                 }
@@ -69,6 +71,11 @@ namespace Labyrinth.Controllers
         private static bool CheckAnimatable(GameObject o)
         {
             return o.GetComponent<Animator>() != null; 
+        }
+
+        private static bool CheckIdle(GameObject o)
+        {
+            return o.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"); 
         }
 
     }

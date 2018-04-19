@@ -38,7 +38,7 @@ namespace Labyrinth
                     }
                     break; 
                 case 2: 
-                    if (CheckTurnOver(enemies))
+                    if (CheckTurnOver(enemies) && CheckAllIdle())
                     {
                         player.GetComponent<TurnTracker>().MyTurn = true;
                         turn = 0; 
@@ -62,6 +62,16 @@ namespace Labyrinth
                 if (o[i].GetComponent<TurnTracker>() != null)
                     o[i].GetComponent<TurnTracker>().MyTurn = true;
         } 
+
+        public bool CheckAllIdle()
+        {
+            bool value = player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"); 
+            for (int i = 0; i < enemies.Length; i++ ) 
+                value = value && enemies[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle");
+            for (int i = 0; i < allies.Length; i++)
+                value = value && allies[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle");
+            return value; 
+        }
 
     }
 }

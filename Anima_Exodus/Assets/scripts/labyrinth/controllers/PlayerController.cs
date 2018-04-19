@@ -10,8 +10,20 @@ namespace Labyrinth.Controllers
     public class PlayerController : BaseController
     {
 
+        private Vector3Int destination; 
+
+        public Vector3Int Destination
+        {
+            get
+            {
+                return destination; 
+            }
+        }
+
         public override string NextMove(out bool endTurn)
         {
+
+            destination = AEUtilities.PosToInt(transform.position);
 
             int vert = (int)Input.GetAxisRaw("Vertical");
             int horiz = (int)Input.GetAxisRaw("Horizontal");
@@ -29,6 +41,7 @@ namespace Labyrinth.Controllers
                 else if (AEUtilities.CheckTagAtLocation(AEUtilities.PosToInt(transform.position + transform.forward), "hook"))
                 {
                     endTurn = true;
+                    destination = AEUtilities.PosToInt(transform.position + (transform.forward * 2)); 
                     return "swing";
                 }
             }
@@ -50,6 +63,7 @@ namespace Labyrinth.Controllers
                 {
                     StartCoroutine(LabyrinthInteractions.JumpDown(gameObject, move));
                     endTurn = true;
+                    destination = AEUtilities.PosToInt(transform.position + transform.forward + (transform.up * -3));
                     return "";
                 } else if (AEUtilities.CheckTagAtLocation(move, "enemy", out o)) 
                 { 
@@ -62,11 +76,13 @@ namespace Labyrinth.Controllers
                     if (vert == 1)
                     {
                         endTurn = true;
+                        destination = AEUtilities.PosToInt(transform.position + transform.forward); 
                         return "step_forward";
                     }
                     else if (vert == -1)
                     {
                         endTurn = true;
+                        destination = AEUtilities.PosToInt(transform.position - transform.forward); 
                         return "step_back";
                     }
 

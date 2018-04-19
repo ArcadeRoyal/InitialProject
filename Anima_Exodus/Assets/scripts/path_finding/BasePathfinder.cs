@@ -22,36 +22,43 @@ namespace Pathfinding
         public Vector3Int[] GetPathTowards ( Vector3Int pos, Vector3Int target, string[] validTags ) 
         {
 
-            List<Vector3Int> pathlist = new List<Vector3Int>();  
+            Vector3Int[] dummyList = new Vector3Int[0]; 
             if (pos == target || pos.y != target.y) 
-                return pathlist.ToArray(); 
+                return dummyList; 
 
             List<PathNode> openList = new List<PathNode>();
             List<PathNode> closedList = new List<PathNode>();
 
             PathNode active = new PathNode(null, 0, GetHeuristic(pos, target), pos);
-            closedList.Add(active); 
-
-            Vector3Int[] movePool = GetValidMovePool(active.Pos, validTags);
-            for (int i = 0; i < movePool.Length; i++)
-            {
-                PathNode node = new PathNode(
-            }
+            openList.Add(active); 
 
             while (openList.Count > 0) 
             {
+                active = GetBestNode(openList); 
+
                 if (active.Pos == target)
                     return active.GetPath().ToArray();
-
+                
                 closedList.Add(active); 
                 openList.Remove(active);
 
                 Vector3Int[] movePool = GetValidMovePool(active.Pos, validTags);
                 for (int i = 0; i < movePool.Length; i++ ) 
-                { 
-                    PathNode node = new PathNode()
+                {
+                    PathNode node = new PathNode(active, active.Cost + 1, GetHeuristic(movePool[i], target), movePool[i]); 
+                    if (closedList.Contains(node))
+                    {
+                        if (closedList[closedList.IndexOf(node)].F > node.F)
+                            closedList[closedList.IndexOf(node)].Parent = active; 
+                    }  
+                    else
+                    {
+                        openList.Add(node); 
+                    }
                 }
             }
+
+            return dummyList; 
         }
 
         protected abstract Vector3Int[] GetValidMovePool(Vector3Int pos, string[] validTags); 

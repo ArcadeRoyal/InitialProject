@@ -106,7 +106,7 @@ public static class AEUtilities
     {
         List<GameTags> taglist = GetTagsAtLocation(pos);
         for (int i = 0; i < taglist.Count; i++)
-            for (int j = 0; j < strings.Length; j++ )
+            for (int j = 0; j < tags.Length; j++ )
                 if (taglist[i].CheckTag(tags[j]))
                     return true;
         return false;

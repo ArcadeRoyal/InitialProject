@@ -35,6 +35,10 @@ namespace Pathfinding
             {
                 return cost; 
             }
+            set
+            {
+                cost = value; 
+            }
         }
 
         public Vector3Int Pos 

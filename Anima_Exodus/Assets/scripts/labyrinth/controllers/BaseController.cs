@@ -14,7 +14,7 @@ namespace Labyrinth.Controllers
         private TurnTracker turnTracker;
 
         // *********** METHODS **************
-        protected void Awake()
+        protected virtual void Awake()
         {
             animator = GetComponent<Animator>();
             turnTracker = GetComponent<TurnTracker>();
