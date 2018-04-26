@@ -25,7 +25,7 @@ namespace Labyrinth.Events
 
         private void Awake()
         {
-            overlay = GameObject.Find("Game_Overlay").GetComponent<OverlayManager>();
+            overlay = GameObject.Find("GameOverlay").GetComponent<OverlayManager>();
         }
 
         public IEnumerator RunEvent(GameObject o)

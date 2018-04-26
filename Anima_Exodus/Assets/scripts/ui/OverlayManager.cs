@@ -29,9 +29,11 @@ namespace UI
 
         public IEnumerator Flash(Color c, float t)
         {
+            Debug.Log("Flash"); 
             overlay.color = c;
+            overlay.canvasRenderer.SetAlpha(1f); 
             yield return new WaitForSeconds(t);
-            overlay.color = Color.clear; 
+            overlay.canvasRenderer.SetAlpha(0f); 
         }
     }
 }
