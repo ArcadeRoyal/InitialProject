@@ -42,7 +42,29 @@ namespace Labyrinth.Controllers
                 {
                     endTurn = true;
                     destination = AEUtilities.PosToInt(transform.position + (transform.forward * 2)); 
-                    return "swing";
+                    if (AEUtilities.CheckTagAtLocation(AEUtilities.PosToInt(transform.position + transform.forward*2), "enemy", out o))
+                    {
+                        StartCoroutine(LabyrinthInteractions.Swing_Tackle(gameObject, o));
+                        return ""; 
+                    } 
+                    else
+                    {
+                        return "swing"; 
+                    }
+                }
+                else
+                {
+                    endTurn = true;
+                    destination = AEUtilities.PosToInt(transform.position + transform.forward * 2);
+                    if (AEUtilities.CheckTagAtLocation(AEUtilities.PosToInt(transform.position + transform.forward * 2), "enemy", out o))
+                    {
+                        StartCoroutine(LabyrinthInteractions.Tackle(gameObject, o));
+                        return "";
+                    }
+                    else
+                    {
+                        return "lunge";
+                    }
                 }
             }
             else if (horiz == 1)
@@ -58,10 +80,13 @@ namespace Labyrinth.Controllers
             else if (vert != 0)
             {
                 Vector3Int move = AEUtilities.PosToInt(transform.position + transform.forward * vert);
-                GameObject o; 
+                GameObject o;
                 if (AEUtilities.CheckTagAtLocation(move, "pit"))
                 {
-                    StartCoroutine(LabyrinthInteractions.JumpDown(gameObject, move));
+                    if (AEUtilities.CheckTagAtLocation(AEUtilities.PosToInt(transform.position + transform.forward + (transform.up * -3)), "enemy", out o))
+                        StartCoroutine(LabyrinthInteractions.JumpOn(gameObject, o));
+                    else
+                        StartCoroutine(LabyrinthInteractions.JumpDown(gameObject, move));
                     endTurn = true;
                     destination = AEUtilities.PosToInt(transform.position + transform.forward + (transform.up * -3));
                     return "";

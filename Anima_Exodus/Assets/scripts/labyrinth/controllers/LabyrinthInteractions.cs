@@ -55,17 +55,107 @@ namespace Labyrinth.Controllers
                           subject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle") + " " +
                           target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("idle"));
                 GameManager.instance.Paused = false; 
+
+            }
+        }
+
+        public static IEnumerator JumpOn(GameObject player, GameObject target)
+        {
+            if (CheckAnimatable(player) && CheckAnimatable(target))
+            {
+                GameManager.instance.Paused = true;
+                while (!CheckIdle(player) || !CheckIdle(target))
+                {
+                    yield return null;
+                }
+                TurnToFace(player, AEUtilities.PosToInt(target.transform.position));
+                TurnToFace(target, AEUtilities.PosToInt(player.transform.position));
+                yield return null;
+                while (!CheckIdle(player) || !CheckIdle(target))
+                {
+                    yield return null;
+                }
+                player.GetComponent<Animator>().SetTrigger("jump_attack");
+                target.GetComponent<Animator>().SetTrigger("jump_bonk");
+                yield return null;
+                while (!CheckIdle(player) || target != null)
+                {
+                    yield return null;
+                }
+                GameManager.instance.Paused = false;
+
+            }
+        }
+
+        public static IEnumerator Tackle(GameObject player, GameObject target)
+        {
+            if (CheckAnimatable(player) && CheckAnimatable(target))
+            {
+                GameManager.instance.Paused = true;
+                while (!CheckIdle(player) || !CheckIdle(target))
+                {
+                    yield return null;
+                }
+                TurnToFace(player, AEUtilities.PosToInt(target.transform.position));
+                TurnToFace(target, AEUtilities.PosToInt(player.transform.position));
+                yield return null;
+                while (!CheckIdle(player) || !CheckIdle(target))
+                {
+                    yield return null;
+                }
+                player.GetComponent<Animator>().SetTrigger("lunge");
+                target.GetComponent<Animator>().SetTrigger("stun");
+                yield return null;
+                while (!CheckIdle(player) || target != null)
+                {
+                    yield return null;
+                }
+                GameManager.instance.Paused = false;
+
+            }
+        }
+
+        public static IEnumerator Swing_Tackle(GameObject player, GameObject target)
+        {
+            if (CheckAnimatable(player) && CheckAnimatable(target))
+            {
+                GameManager.instance.Paused = true;
+                while (!CheckIdle(player) || !CheckIdle(target))
+                {
+                    yield return null;
+                }
+                TurnToFace(player, AEUtilities.PosToInt(target.transform.position));
+                TurnToFace(target, AEUtilities.PosToInt(player.transform.position));
+                yield return null;
+                while (!CheckIdle(player) || !CheckIdle(target))
+                {
+                    yield return null;
+                }
+                player.GetComponent<Animator>().SetTrigger("swing");
+                target.GetComponent<Animator>().SetTrigger("stun");
+                yield return null;
+                while (!CheckIdle(player) || target != null)
+                {
+                    yield return null;
+                }
+                GameManager.instance.Paused = false;
+
             }
         }
 
         private static void TurnToFace(GameObject o, Vector3Int target)
         {
-            if (target == AEUtilities.PosToInt(o.transform.position + o.transform.right))
-                o.GetComponent<Animator>().SetTrigger("turn_right");
-            else if (target == AEUtilities.PosToInt(o.transform.position + o.transform.right * -1))
-                o.GetComponent<Animator>().SetTrigger("turn_left");
-            else if (target == AEUtilities.PosToInt(o.transform.position + o.transform.forward * -1))
-                o.GetComponent<Animator>().SetTrigger("turn_180");
+            if (AEUtilities.CheckGridLinear(AEUtilities.PosToInt(o.transform.position), target))
+            {
+                Vector3Int adjTarget = AEUtilities.GetAdjacentInt(AEUtilities.PosToInt(o.transform.position), target);
+                if (adjTarget == AEUtilities.PosToInt(o.transform.position + o.transform.right))
+                    o.GetComponent<Animator>().SetTrigger("turn_right");
+                else if (adjTarget == AEUtilities.PosToInt(o.transform.position + o.transform.right * -1))
+                    o.GetComponent<Animator>().SetTrigger("turn_left");
+                else if (adjTarget == AEUtilities.PosToInt(o.transform.position + o.transform.forward * -1))
+                    o.GetComponent<Animator>().SetTrigger("turn_180");
+            }
+            
         }
 
         private static bool CheckAnimatable(GameObject o)

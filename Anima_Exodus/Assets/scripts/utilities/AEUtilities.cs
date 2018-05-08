@@ -35,7 +35,7 @@ public static class AEUtilities
     public static Vector3Int GetAdjacentInt(Vector3Int source, Vector3Int target)
     {
         Vector3 normalized = (new Vector3(target.x, target.y, target.z) - new Vector3(source.x, source.y, source.z)).normalized;
-        return PosToInt(normalized);
+        return source + PosToInt(normalized);
     }
 
     public static bool Adjacent(GameObject o, Vector3Int v1)

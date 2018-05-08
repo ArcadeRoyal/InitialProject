@@ -7,17 +7,9 @@ namespace Labyrinth.Controllers
     public class ObjectDestroyer : MonoBehaviour
     {
 
-        private 
-
         public void DestroyObject() 
         {
-            
-        }
-
-        private IEnumerable DestroyRoutine() 
-        { 
-        
-
+            Destroy(gameObject); 
         }
 
     }
